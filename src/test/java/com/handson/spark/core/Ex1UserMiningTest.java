@@ -3,6 +3,7 @@ package com.handson.spark.core;
 
 import com.handson.spark.utils.Tweet;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,8 @@ public class Ex1UserMiningTest {
   public void tweetsByUser() {
     // run
     JavaPairRDD<String, Iterable<Tweet>> tweetsByUser = ex1UserMining.tweetsByUser();
+
+    JavaRDD<String> keys = tweetsByUser.keys();
 
     // assert
     Assert.assertEquals(5967, tweetsByUser.count());

@@ -104,6 +104,7 @@ public class DataFrameOnTweets {
     // TODO write code here
     Dataset filtered = dataFrame.filter("");
 
+    filtered.show();
     return filtered;
 
   }

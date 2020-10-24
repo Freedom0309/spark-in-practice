@@ -21,7 +21,8 @@ public class DataFrameOnTweetsTest {
   public void loadData() {
     // run
     Dataset result = dataFrame.loadData();
-
+    long count = result.count();
+    System.out.println(count);
     result.show();
     // assert
     Assert.assertEquals(8198, result.toJavaRDD().count());

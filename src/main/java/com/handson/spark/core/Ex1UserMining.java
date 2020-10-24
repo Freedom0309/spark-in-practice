@@ -1,11 +1,17 @@
 package com.handson.spark.core;
 
+import com.handson.spark.utils.Content;
 import com.handson.spark.utils.Parse;
 import com.handson.spark.utils.Tweet;
 import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 
 /**
  *  The Java Spark API documentation: http://spark.apache.org/docs/latest/api/java/index.html
@@ -27,7 +33,7 @@ import org.apache.spark.api.java.JavaSparkContext;
  */
 public class Ex1UserMining {
 
-  private static String pathToFile = "data/reduced-tweets.json";
+  private static String pathToFile = "F:\\IdeaProjects\\spark-in-practice-master\\data\\reduced-tweets.json";
 
   /**
    *  Load the data from the json file and return an RDD of Tweet
@@ -40,6 +46,13 @@ public class Ex1UserMining {
         .setMaster("local[*]");
 
     JavaSparkContext sc = new JavaSparkContext(conf);
+
+    SparkSession sparkSession = SparkSession.builder()
+            .appName("加载数据")
+            .config("spark.some.config.option", "true")
+            .getOrCreate();
+    Dataset<Content> as = sparkSession.read().json(pathToFile).as(Encoders.bean(Content.class));
+    as.show();
 
     // Load the data and parse it into a Tweet.
     // Look at the Tweet Object in the TweetUtils class.
@@ -57,7 +70,7 @@ public class Ex1UserMining {
 
     // TODO write code here
     // Hint: the Spark API provides a groupBy method
-    JavaPairRDD<String, Iterable<Tweet>> tweetsByUser = null;
+    JavaPairRDD<String, Iterable<Tweet>> tweetsByUser = tweets.groupBy(Tweet::getUser);
 
     return tweetsByUser;
   }

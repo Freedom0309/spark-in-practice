@@ -4,8 +4,10 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.api.java.function.FlatMapFunction;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -43,10 +45,13 @@ public class Ex0Wordcount {
     // load data and create an RDD where each element will be a word
     // Here the flatMap method is used to separate the word in each line using the space separator
     // In this way it returns an RDD where each "element" is a word
-    JavaRDD<String> words =sc.textFile(pathToFile);
-    JavaRDD<String[]> map = words.map(line -> line.split(""));
+    JavaRDD<String> words =sc.textFile(pathToFile)
+            .flatMap(
+                    (FlatMapFunction<String, String>) line
+                            -> Arrays.asList(line.split(" ")).iterator()
+            );
 
-            map.foreach(System.out::println);
+
     return words;
 
   }
